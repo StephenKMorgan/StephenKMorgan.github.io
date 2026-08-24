@@ -462,15 +462,19 @@ ul { margin: 0; padding: 0; list-style: none; }
   letter-spacing: 0.02em;
 }
 
+/* Accent, deliberately not green: a green status dot reads as an
+   "open to work" availability signal, which this badge is not. */
 .hero__dot {
   width: 8px;
   height: 8px;
   flex: none;
   border-radius: 50%;
-  background: #1f9d55;
-  box-shadow: 0 0 0 3px rgba(31, 157, 85, 0.22);
+  background: var(--accent);
+  /* Static fallback first: an unsupported color-mix() drops the whole
+     declaration, and the halo should degrade rather than disappear. */
+  box-shadow: 0 0 0 3px rgba(47, 95, 191, 0.22);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
 }
-:root[data-theme="dark"] .hero__dot { background: #34d17d; }
 
 .hero__name {
   font-size: clamp(2.4rem, 1.5rem + 4.2vw, 4.15rem);

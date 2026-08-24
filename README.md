@@ -14,7 +14,6 @@ assets/css/style.css     design tokens + neumorphic component system
 assets/js/main.js        theme toggle, scroll-spy, mobile nav, reveal-on-scroll
 assets/fonts/            Inter (self-hosted variable font, latin subsets)
 assets/img/              favicon + Open Graph card
-assets/resume/           resume PDF
 ```
 
 ## Editing
