@@ -1,0 +1,835 @@
+/* ==========================================================================
+   Stephen K. Morgan — personal site
+   Soft-neumorphic design system. No frameworks, no build step.
+
+   Guiding rule: DEPTH IS DECORATIVE, CONTRAST IS NOT.
+   Neumorphic shadows carry affordance only. Every piece of text and every
+   focus state uses an independently contrast-checked token, so the design
+   never trades legibility for the effect.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Surfaces must be mid-tone: neumorphism is impossible on pure white/black,
+     because one of the two paired shadows would have nowhere to go. */
+  --surface:        #e7eaf0;
+  --surface-sunk:   #e2e5ec;
+  --shadow-dark:    #bfc6d4;
+  --shadow-light:   #ffffff;
+
+  --text:           #1b2027;   /* 13.6:1 on --surface */
+  --text-muted:     #545c6b;   /*  5.6:1 on --surface */
+  --text-faint:     #606773;   /*  4.7:1 on --surface — decorative labels only */
+
+  --accent:         #2f5fbf;
+  --accent-ink:     #24499a;   /* accent text on --surface, 6.4:1 */
+  --accent-warm:    #905b0d;   /* a nod to the old BYU gold, darkened for AA */
+  --on-accent:      #ffffff;
+
+  --ring:           #2f5fbf;
+
+  /* Shadow geometry, kept as tokens so depth is tunable in one place. */
+  --d-lg: 9px;  --b-lg: 18px;
+  --d-md: 6px;  --b-md: 12px;
+  --d-sm: 3px;  --b-sm:  6px;
+
+  --radius-lg: 22px;
+  --radius-md: 15px;
+  --radius-pill: 999px;
+
+  --maxw: 1080px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --grain: 0.30;
+
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --surface:        #23272e;
+  --surface-sunk:   #1f232a;
+  --shadow-dark:    #15181d;
+  --shadow-light:   #2e343d;
+
+  --text:           #e9edf3;   /* 12.8:1 on --surface */
+  --text-muted:     #a8b2c0;   /*  7.0:1 on --surface */
+  --text-faint:     #8b95a4;   /*  5.0:1 on --surface */
+
+  --accent:         #6f9bf0;
+  --accent-ink:     #8fb3f5;   /* 7.1:1 on --surface */
+  --accent-warm:    #e2a94f;
+  --on-accent:      #10141a;
+
+  --ring:           #8fb3f5;
+  --grain: 0.16;
+
+  color-scheme: dark;
+}
+
+/* System-preference default, but only while the user has not chosen a theme
+   explicitly — [data-theme="light"] must still win here. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface:        #23272e;
+    --surface-sunk:   #1f232a;
+    --shadow-dark:    #15181d;
+    --shadow-light:   #2e343d;
+
+    --text:           #e9edf3;
+    --text-muted:     #a8b2c0;
+    --text-faint:     #8b95a4;
+
+    --accent:         #6f9bf0;
+    --accent-ink:     #8fb3f5;
+    --accent-warm:    #e2a94f;
+    --on-accent:      #10141a;
+
+    --ring:           #8fb3f5;
+    --grain: 0.16;
+
+    color-scheme: dark;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & base
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* Sticky header height + breathing room, so anchored sections aren't
+     hidden underneath the nav bar. */
+  scroll-padding-top: 92px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--surface);
+  color: var(--text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+  line-height: 1.68;
+  letter-spacing: 0.005em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* A whisper of grain keeps large flat surfaces from banding.
+
+   It MUST blend rather than paint over the page: a plain alpha overlay pulls
+   every surface toward mid-grey, which on the dark theme lifted the background
+   ~40% and both flattened the shadows and broke the audited text contrast.
+   `soft-light` leaves base luminance essentially untouched and only perturbs
+   it per-pixel, so the tokens stay true in both themes. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--grain);
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.18;
+  letter-spacing: -0.021em;
+  font-weight: 700;
+}
+
+p { margin: 0 0 1.05em; }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* One visible focus treatment for everything — neumorphic shadow alone is NOT
+   an accessible focus indicator, so we draw a real ring. */
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection { background: var(--accent); color: var(--on-accent); }
+
+/* --------------------------------------------------------------------------
+   3. Neumorphic primitives
+   -------------------------------------------------------------------------- */
+
+.raised {
+  background: var(--surface);
+  box-shadow:
+     var(--d-lg)          var(--d-lg)          var(--b-lg) var(--shadow-dark),
+    calc(var(--d-lg) * -1) calc(var(--d-lg) * -1) var(--b-lg) var(--shadow-light);
+}
+
+.raised-sm {
+  background: var(--surface);
+  box-shadow:
+     var(--d-md)          var(--d-md)          var(--b-md) var(--shadow-dark),
+    calc(var(--d-md) * -1) calc(var(--d-md) * -1) var(--b-md) var(--shadow-light);
+}
+
+.pressed {
+  background: var(--surface-sunk);
+  box-shadow:
+    inset  var(--d-md)          var(--d-md)          var(--b-md) var(--shadow-dark),
+    inset calc(var(--d-md) * -1) calc(var(--d-md) * -1) var(--b-md) var(--shadow-light);
+}
+
+.pressed-sm {
+  background: var(--surface-sunk);
+  box-shadow:
+    inset  var(--d-sm)          var(--d-sm)          var(--b-sm) var(--shadow-dark),
+    inset calc(var(--d-sm) * -1) calc(var(--d-sm) * -1) var(--b-sm) var(--shadow-light);
+}
+
+/* Letterpress — engraved type. Applied only to large display headings, never
+   to body copy, so it can never erode reading contrast. */
+.letterpress {
+  text-shadow:
+     1px  1px 1px var(--shadow-light),
+    -1px -1px 1px var(--shadow-dark);
+}
+:root[data-theme="dark"] .letterpress,
+:root:not([data-theme="light"]) .letterpress {
+  text-shadow:
+     1px  1px 1px var(--shadow-dark),
+    -1px -1px 1px var(--shadow-light);
+}
+
+/* --------------------------------------------------------------------------
+   4. Layout
+   -------------------------------------------------------------------------- */
+
+.wrap {
+  width: min(100% - 2.5rem, var(--maxw));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+}
+
+.section__head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.section__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.85rem;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.735rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.section__title {
+  font-size: clamp(1.85rem, 1.35rem + 2.2vw, 2.85rem);
+}
+
+.section__lede {
+  margin-top: 0.85rem;
+  max-width: 62ch;
+  color: var(--text-muted);
+  font-size: 1.06em;
+}
+
+/* --------------------------------------------------------------------------
+   5. Skip link
+   -------------------------------------------------------------------------- */
+
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 650;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.18s var(--ease);
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* --------------------------------------------------------------------------
+   6. Header / navigation
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-block: 0.85rem;
+  background: var(--surface);
+}
+
+/* Fades in a soft lip under the bar once the page scrolls, so the header
+   detaches from the content instead of floating ambiguously. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 22px;
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(var(--shadow-dark), transparent);
+  transition: opacity 0.25s var(--ease);
+}
+.site-header.is-stuck::after { opacity: 0.5; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0.6rem 0.55rem 1.4rem;
+  border-radius: var(--radius-pill);
+}
+
+.nav__brand {
+  margin-right: auto;
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav__brand span { color: var(--accent-ink); }
+
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nav__link {
+  display: block;
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.925rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.nav__link:hover { color: var(--text); }
+
+/* Scroll-spy state, set from JS via aria-current. */
+.nav__link[aria-current="true"] {
+  color: var(--accent-ink);
+  background: var(--surface-sunk);
+  box-shadow:
+    inset  var(--d-sm)          var(--d-sm)          var(--b-sm) var(--shadow-dark),
+    inset calc(var(--d-sm) * -1) calc(var(--d-sm) * -1) var(--b-sm) var(--shadow-light);
+}
+
+/* --------------------------------------------------------------------------
+   7. Icon buttons (theme toggle, mobile menu)
+   -------------------------------------------------------------------------- */
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow:
+     var(--d-sm)          var(--d-sm)          var(--b-sm) var(--shadow-dark),
+    calc(var(--d-sm) * -1) calc(var(--d-sm) * -1) var(--b-sm) var(--shadow-light);
+  transition: box-shadow 0.18s var(--ease), color 0.18s var(--ease);
+}
+.icon-btn:hover { color: var(--text); }
+.icon-btn:active,
+.icon-btn[aria-expanded="true"] {
+  color: var(--accent-ink);
+  box-shadow:
+    inset  var(--d-sm)          var(--d-sm)          var(--b-sm) var(--shadow-dark),
+    inset calc(var(--d-sm) * -1) calc(var(--d-sm) * -1) var(--b-sm) var(--shadow-light);
+}
+.icon-btn svg { width: 19px; height: 19px; }
+
+/* Swap sun/moon glyphs with the active theme. */
+.icon-btn .icon-moon { display: none; }
+:root[data-theme="dark"] .icon-btn .icon-moon { display: block; }
+:root[data-theme="dark"] .icon-btn .icon-sun  { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .icon-btn .icon-moon { display: block; }
+  :root:not([data-theme="light"]) .icon-btn .icon-sun  { display: none; }
+}
+
+.nav__toggle { display: none; }
+
+/* --------------------------------------------------------------------------
+   8. Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.5rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.945rem;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+     var(--d-md)          var(--d-md)          var(--b-md) var(--shadow-dark),
+    calc(var(--d-md) * -1) calc(var(--d-md) * -1) var(--b-md) var(--shadow-light);
+  transition: box-shadow 0.18s var(--ease), transform 0.18s var(--ease),
+              color 0.18s var(--ease);
+}
+.btn:hover { transform: translateY(-2px); color: var(--accent-ink); }
+.btn:active {
+  transform: translateY(0);
+  box-shadow:
+    inset  var(--d-sm)          var(--d-sm)          var(--b-sm) var(--shadow-dark),
+    inset calc(var(--d-sm) * -1) calc(var(--d-sm) * -1) var(--b-sm) var(--shadow-light);
+}
+.btn svg { width: 17px; height: 17px; flex: none; }
+
+/* The one solid-fill element on the page: the single primary action needs to
+   win against a field of same-colored surfaces. */
+.btn--primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.btn--primary:hover { color: var(--on-accent); }
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   9. Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  padding-block: clamp(3rem, 6vw, 5.5rem) clamp(3.5rem, 7vw, 6rem);
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.83rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.hero__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: #1f9d55;
+  box-shadow: 0 0 0 3px rgba(31, 157, 85, 0.22);
+}
+:root[data-theme="dark"] .hero__dot { background: #34d17d; }
+
+.hero__name {
+  font-size: clamp(2.4rem, 1.5rem + 4.2vw, 4.15rem);
+  letter-spacing: -0.035em;
+}
+
+.hero__role {
+  margin-top: 0.7rem;
+  font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.4rem);
+  font-weight: 650;
+  color: var(--accent-ink);
+}
+
+.hero__pitch {
+  margin-top: 1.35rem;
+  max-width: 54ch;
+  color: var(--text-muted);
+  font-size: 1.075em;
+}
+
+/* Portrait sits in a carved well — the most literal skeuomorphic moment on
+   the page, and the reason the hero reads as a physical object. */
+.hero__portrait {
+  display: grid;
+  place-items: center;
+  width: clamp(190px, 22vw, 260px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 18px;
+}
+
+.hero__portrait img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hero__monogram {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent-ink);
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow:
+     var(--d-md)          var(--d-md)          var(--b-md) var(--shadow-dark),
+    calc(var(--d-md) * -1) calc(var(--d-md) * -1) var(--b-md) var(--shadow-light);
+}
+
+/* --------------------------------------------------------------------------
+   10. Cards
+   -------------------------------------------------------------------------- */
+
+.card {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  border-radius: var(--radius-lg);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 1.9rem);
+}
+.grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); }
+
+/* --------------------------------------------------------------------------
+   11. About
+   -------------------------------------------------------------------------- */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 1.9rem);
+  align-items: start;
+}
+
+.factlist { display: grid; gap: 1.35rem; }
+
+.fact__label {
+  margin-bottom: 0.25rem;
+  font-size: 0.715rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.fact__value { font-weight: 650; }
+.fact__value a { font-weight: 650; }
+
+/* --------------------------------------------------------------------------
+   12. Experience timeline
+   -------------------------------------------------------------------------- */
+
+.timeline { display: grid; gap: clamp(1.25rem, 2.5vw, 1.75rem); }
+
+.role__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.role__title { font-size: 1.3rem; }
+
+.role__org {
+  font-weight: 650;
+  color: var(--accent-ink);
+}
+
+.role__dates {
+  margin-left: auto;
+  padding: 0.4rem 0.95rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.79rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.bullets { display: grid; gap: 0.7rem; }
+
+.bullets li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--text-muted);
+}
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow:
+     1.5px  1.5px 3px var(--shadow-dark),
+    -1.5px -1.5px 3px var(--shadow-light);
+}
+
+/* --------------------------------------------------------------------------
+   13. Skills
+   -------------------------------------------------------------------------- */
+
+.skillgroup__title {
+  margin-bottom: 1.15rem;
+  font-size: 0.735rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.chip {
+  padding: 0.5rem 1.05rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   14. Projects
+   -------------------------------------------------------------------------- */
+
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.22s var(--ease);
+}
+.project:hover { transform: translateY(-4px); }
+
+.project__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.project__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 14px;
+  color: var(--accent-ink);
+}
+.project__icon svg { width: 21px; height: 21px; }
+
+.project__title { font-size: 1.16rem; }
+
+.project__desc {
+  color: var(--text-muted);
+  font-size: 0.955em;
+  flex: 1;
+}
+
+.project__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.15rem;
+}
+
+.chip--tech {
+  padding: 0.34rem 0.8rem;
+  font-size: 0.78rem;
+}
+
+/* Marks work whose repository is private, so a card without a link reads as
+   deliberate rather than broken. */
+.chip--private {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-faint);
+}
+.chip--private svg { width: 12px; height: 12px; }
+
+.project__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+.project__link:hover { text-decoration: underline; }
+.project__link svg { width: 14px; height: 14px; }
+
+/* --------------------------------------------------------------------------
+   15. Contact
+   -------------------------------------------------------------------------- */
+
+.contact-card {
+  text-align: center;
+  padding: clamp(2.2rem, 5vw, 3.6rem);
+}
+
+.contact-card .section__title { margin-bottom: 0.9rem; }
+
+.contact-card .section__lede {
+  margin-inline: auto;
+  max-width: 46ch;
+}
+
+.contact-card .btn-row { justify-content: center; }
+
+/* --------------------------------------------------------------------------
+   16. Footer
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  padding-block: 2.5rem 3rem;
+  color: var(--text-faint);
+  font-size: 0.865rem;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--shadow-dark);
+}
+
+/* --------------------------------------------------------------------------
+   17. Scroll reveal
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* --------------------------------------------------------------------------
+   18. Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .hero__inner { grid-template-columns: 1fr; justify-items: start; }
+  .hero__portrait { order: -1; }
+  .about { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  html { scroll-padding-top: 80px; }
+
+  .nav { padding-left: 1.1rem; }
+  .nav__toggle { display: grid; order: 3; }
+
+  /* The old site hid its content below 500px. This collapses the nav into a
+     disclosure panel instead — every section stays reachable on mobile. */
+  .nav__list {
+    order: 4;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--shadow-dark);
+  }
+  .nav__list[data-open="false"] { display: none; }
+
+  .nav { flex-wrap: wrap; border-radius: var(--radius-lg); }
+  .nav__link { padding: 0.7rem 1rem; }
+
+  .role__dates { margin-left: 0; }
+  .btn { flex: 1 1 auto; justify-content: center; }
+}
+
+@media (max-width: 400px) {
+  .wrap { width: min(100% - 1.75rem, var(--maxw)); }
+  .card { padding: 1.4rem; }
+}
+
+/* --------------------------------------------------------------------------
+   19. Motion & print
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+@media print {
+  .site-header, .btn-row, .site-footer, body::before { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card, .raised, .raised-sm, .pressed, .pressed-sm {
+    box-shadow: none !important;
+    border: 1px solid #ccc;
+  }
+  .section { padding-block: 1rem; }
+}
