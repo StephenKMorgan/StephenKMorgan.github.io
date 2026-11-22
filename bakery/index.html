@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surf &amp; Swirl Bakery</title>
+<meta name="description" content="Download Surf & Swirl Bakery, a cozy merge game for Android.">
+<!-- A family download page, not part of the portfolio: keep it out of search results. -->
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffd9b8">
+<link rel="icon" href="img/icon.png" type="image/png">
+<style>
+  @font-face {
+    font-family: "Fredoka";
+    src: url("img/fredoka.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+
+  :root {
+    --cocoa: #5b3220;
+    --cocoa-soft: #7a4a34;
+    --cream: #fff8ee;
+    --peach-top: #ffe6cc;
+    --peach-bottom: #ffc6d3;
+    --green: #34c759;
+    --green-dark: #1e9e43;
+    --pink: #ff6fa8;
+    --pink-dark: #d94a86;
+    --shadow: 0 6px 18px rgba(91, 50, 32, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--cocoa);
+    background: linear-gradient(180deg, var(--peach-top), var(--peach-bottom)) fixed;
+    background-color: var(--peach-top);
+    font: 600 17px/1.5 ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, .btn, .chip { font-family: "Fredoka", ui-rounded, system-ui, sans-serif; font-weight: 700; }
+
+  .wrap { width: min(100% - 32px, 560px); margin: 0 auto; padding: 24px 0 48px; }
+
+  .back { display: inline-block; color: var(--cocoa-soft); text-decoration: none; font-size: 15px; margin-bottom: 8px; }
+  .back:hover { text-decoration: underline; }
+
+  .hero { text-align: center; position: relative; }
+  .hero__art { position: relative; height: 170px; margin: 8px auto 0; width: 240px; }
+  .hero__art img { position: absolute; filter: drop-shadow(0 8px 10px rgba(91, 50, 32, 0.25)); }
+  .hero__roll { width: 130px; left: 20px; top: 40px; animation: bob 2.4s ease-in-out infinite; }
+  .hero__dog { width: 110px; right: 18px; top: 0; animation: bob 2s ease-in-out 0.4s infinite; }
+  .hero__spark { width: 44px; left: 8px; top: 6px; animation: twinkle 1.8s ease-in-out infinite; }
+
+  h1 {
+    margin: 4px 0 4px;
+    font-size: clamp(34px, 9vw, 46px);
+    line-height: 1.05;
+    color: #fff;
+    text-shadow:
+      0 3px 0 var(--pink-dark), 2px 2px 0 var(--pink-dark), -2px 2px 0 var(--pink-dark),
+      2px -2px 0 var(--pink-dark), -2px -2px 0 var(--pink-dark), 0 6px 12px rgba(91, 50, 32, 0.3);
+  }
+  .tagline { margin: 0 0 18px; color: var(--cocoa-soft); }
+
+  .card {
+    background: var(--cream);
+    border: 3px solid #fff;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin: 16px 0;
+  }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    padding: 16px 20px 18px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    background: linear-gradient(180deg, #5fdc7d, var(--green));
+    box-shadow: 0 5px 0 var(--green-dark), var(--shadow);
+    color: #fff;
+    font-size: 22px;
+    text-decoration: none;
+    text-shadow: 0 2px 0 var(--green-dark);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn img { width: 34px; height: 34px; }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--green-dark), var(--shadow); }
+  .btn:focus-visible { outline: 3px solid var(--cocoa); outline-offset: 4px; }
+  .btn[aria-disabled="true"] {
+    background: linear-gradient(180deg, #cfc6c0, #b9afa8);
+    box-shadow: 0 5px 0 #8f8580, var(--shadow);
+    text-shadow: 0 2px 0 #8f8580;
+    pointer-events: none;
+  }
+
+  .meta { text-align: center; margin: 12px 0 0; font-size: 15px; color: var(--cocoa-soft); }
+  .chip {
+    display: inline-block; padding: 2px 12px; border-radius: 999px;
+    background: var(--pink); color: #fff; font-size: 14px; border: 2px solid #fff;
+  }
+
+  h2 { margin: 0 0 10px; font-size: 22px; display: flex; align-items: center; gap: 8px; }
+  h2 img { width: 32px; height: 32px; }
+
+  .notes { white-space: pre-line; margin: 0; }
+
+  ol { margin: 0; padding-left: 22px; }
+  ol li { margin: 6px 0; }
+  .tip { margin: 12px 0 0; font-size: 15px; color: var(--cocoa-soft); }
+
+  .shots { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; scroll-snap-type: x mandatory; }
+  .shots img {
+    flex: 0 0 auto; width: 46%; max-width: 210px; border-radius: 18px; border: 3px solid #fff;
+    box-shadow: var(--shadow); scroll-snap-align: start; background: var(--cream);
+  }
+
+  .features { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .features li { display: flex; gap: 10px; align-items: center; }
+  .features img { width: 36px; height: 36px; flex: 0 0 auto; }
+
+  footer { text-align: center; font-size: 13px; color: var(--cocoa-soft); margin-top: 24px; }
+  footer a { color: inherit; }
+
+  @keyframes bob { 0%, 100% { transform: translateY(-4px); } 50% { transform: translateY(5px); } }
+  @keyframes twinkle { 0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.7; } 50% { transform: scale(1.1) rotate(15deg); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .hero__art img { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">‹ stephenkmorgan.github.io</a>
+
+  <header class="hero">
+    <div class="hero__art" aria-hidden="true">
+      <img class="hero__spark" src="img/sparkles.webp" alt="">
+      <img class="hero__roll" src="img/iced_roll.webp" alt="">
+      <img class="hero__dog" src="img/dog_face.webp" alt="">
+    </div>
+    <h1>Surf &amp; Swirl<br>Bakery</h1>
+    <p class="tagline">A cozy merge game for Mandy, where everything smells like cinnamon rolls.</p>
+  </header>
+
+  <section class="card" aria-labelledby="dl-title">
+    <h2 id="dl-title" hidden>Download</h2>
+    <a class="btn" id="download"
+       href="https://github.com/StephenKMorgan/Learning-Merge-Game/releases/latest/download/surf-and-swirl.apk">
+      <img src="img/cinnamon_roll.webp" alt="">
+      <span id="download-label">Download for Android</span>
+    </a>
+    <p class="meta" id="meta">Checking for the latest version…</p>
+  </section>
+
+  <section class="card" id="whats-new" hidden aria-labelledby="new-title">
+    <h2 id="new-title"><img src="img/golden_roll.webp" alt="">What's new</h2>
+    <p class="notes" id="notes"></p>
+  </section>
+
+  <section class="card" aria-labelledby="install-title">
+    <h2 id="install-title"><img src="img/woman_cook.webp" alt="">How to install</h2>
+    <ol>
+      <li>Tap <strong>Download for Android</strong> above.</li>
+      <li>When it finishes, tap the download notification (or open <strong>My Files → Downloads</strong>) and tap <strong>surf-and-swirl.apk</strong>.</li>
+      <li>The first time, the phone asks to allow installs from this source. Tap <strong>Settings</strong>, turn on <strong>Allow from this source</strong>, then go back.</li>
+      <li>Tap <strong>Install</strong>. If Google Play Protect says it doesn't recognize the app, tap <strong>More details → Install anyway</strong>. It's only unrecognized because it isn't from the Play Store.</li>
+    </ol>
+    <p class="tip"><strong>Updating later?</strong> Same button, same steps, but the phone says <strong>Update</strong> instead of Install. Your bakery, coins and progress stay exactly where you left them.</p>
+  </section>
+
+  <section class="card" aria-labelledby="peek-title">
+    <h2 id="peek-title"><img src="img/croissant.webp" alt="">A peek inside</h2>
+    <div class="shots">
+      <img src="img/shot-board.webp" alt="The merge board with orders from customers" loading="lazy" width="420" height="933">
+      <img src="img/shot-bakery.webp" alt="Fixing up the bakery, with Mandy and Surf" loading="lazy" width="420" height="933">
+      <img src="img/shot-puzzle.webp" alt="Picking a brain puzzle to pay for a shop treat" loading="lazy" width="420" height="933">
+    </div>
+    <ul class="features">
+      <li><img src="img/cupcake.webp" alt="">Merge treats, serve customers and fix up the bakery on Maple Lane.</li>
+      <li><img src="img/brain.webp" alt="">No money, ever. Shop treats cost brain puzzles instead.</li>
+      <li><img src="img/ticket.webp" alt="">Daily rewards, a season pass and a VIP pass you earn with a Brain Gauntlet.</li>
+      <li><img src="img/maple_leaf.webp" alt="">Seasonal events and themes all year round.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Made with love for Mandy (and Surf). Works offline, no ads, no accounts.<br>
+    Item art: <a href="https://github.com/microsoft/fluentui-emoji" rel="noopener">Microsoft Fluent Emoji</a> (MIT).
+  </footer>
+</div>
+
+<script>
+(function () {
+  var api = "https://api.github.com/repos/StephenKMorgan/Learning-Merge-Game/releases/latest";
+  var btn = document.getElementById("download");
+  var label = document.getElementById("download-label");
+  var meta = document.getElementById("meta");
+
+  function comingSoon() {
+    btn.setAttribute("aria-disabled", "true");
+    btn.removeAttribute("href");
+    label.textContent = "Coming soon!";
+    meta.textContent = "The first version is still in the oven. Check back soon!";
+  }
+
+  fetch(api, { headers: { Accept: "application/vnd.github+json" } })
+    .then(function (r) {
+      if (r.status === 404) { comingSoon(); return null; }
+      if (!r.ok) throw new Error("status " + r.status);
+      return r.json();
+    })
+    .then(function (rel) {
+      if (!rel) return;
+      var version = (rel.tag_name || "").replace(/^v/, "");
+      var date = rel.published_at ? new Date(rel.published_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }) : "";
+      var apk = (rel.assets || []).filter(function (a) { return /\.apk$/.test(a.name); })[0];
+      if (apk) btn.href = apk.browser_download_url;
+      var size = apk ? " · " + Math.round(apk.size / 1e6) + " MB" : "";
+      meta.innerHTML = "";
+      var chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = "Version " + version;
+      meta.appendChild(chip);
+      meta.appendChild(document.createTextNode(" " + (date ? "Released " + date : "") + size));
+      if (rel.body) {
+        document.getElementById("notes").textContent = rel.body.trim();
+        document.getElementById("whats-new").hidden = false;
+      }
+    })
+    .catch(function () {
+      // Offline or GitHub's API limit: the button still points at the latest release.
+      meta.textContent = "Tap to get the newest version.";
+    });
+})();
+</script>
+</body>
+</html>
