@@ -118,7 +118,8 @@
 
   .shots { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; scroll-snap-type: x mandatory; }
   .shots img {
-    flex: 0 0 auto; width: 46%; max-width: 210px; border-radius: 18px; border: 3px solid #fff;
+    flex: 0 0 auto; width: 46%; max-width: 210px; height: auto; aspect-ratio: 480 / 1066;
+    border-radius: 18px; border: 3px solid #fff;
     box-shadow: var(--shadow); scroll-snap-align: start; background: var(--cream);
   }
 
@@ -142,7 +143,7 @@
     <div class="hero__art" aria-hidden="true">
       <img class="hero__spark" src="img/sparkles.webp" alt="">
       <img class="hero__roll" src="img/iced_roll.webp" alt="">
-      <img class="hero__dog" src="img/dog_face.webp" alt="">
+      <img class="hero__dog" src="img/surf_face.webp" alt="">
     </div>
     <h1>Surf &amp; Swirl<br>Bakery</h1>
     <p class="tagline">A cozy merge game for Mandy, where everything smells like cinnamon rolls.</p>
@@ -164,7 +165,7 @@
   </section>
 
   <section class="card" aria-labelledby="install-title">
-    <h2 id="install-title"><img src="img/woman_cook.webp" alt="">How to install</h2>
+    <h2 id="install-title"><img src="img/mandy_face.webp" alt="">How to install</h2>
     <ol>
       <li>Tap <strong>Download for Android</strong> above.</li>
       <li>When it finishes, tap the download notification (or open <strong>My Files → Downloads</strong>) and tap <strong>surf-and-swirl.apk</strong>.</li>
@@ -177,12 +178,14 @@
   <section class="card" aria-labelledby="peek-title">
     <h2 id="peek-title"><img src="img/croissant.webp" alt="">A peek inside</h2>
     <div class="shots">
-      <img src="img/shot-board.webp" alt="The merge board with orders from customers" loading="lazy" width="420" height="933">
-      <img src="img/shot-bakery.webp" alt="Fixing up the bakery, with Mandy and Surf" loading="lazy" width="420" height="933">
-      <img src="img/shot-puzzle.webp" alt="Picking a brain puzzle to pay for a shop treat" loading="lazy" width="420" height="933">
+      <img src="img/shot-board.webp" alt="The merge board, with customers waiting for their orders" loading="lazy" width="480" height="1066">
+      <img src="img/shot-bakery.webp" alt="Fixing up the bakery: Mandy behind the counter and Surf napping in his bed" loading="lazy" width="480" height="1066">
+      <img src="img/shot-patio.webp" alt="Chapter 2: Surf's sunny patio" loading="lazy" width="480" height="1066">
+      <img src="img/shot-shop.webp" alt="The Brain Shop, where treats cost puzzles instead of money" loading="lazy" width="480" height="1066">
     </div>
     <ul class="features">
-      <li><img src="img/cupcake.webp" alt="">Merge treats, serve customers and fix up the bakery on Maple Lane.</li>
+      <li><img src="img/cupcake.webp" alt="">Merge treats, serve customers and fix up the bakery on Maple Lane, one hand-drawn room at a time.</li>
+      <li><img src="img/sparkles.webp" alt="">Music composed live as you play: café tunes by day, softer at night, and its own song for every event.</li>
       <li><img src="img/brain.webp" alt="">No money, ever. Shop treats cost brain puzzles instead.</li>
       <li><img src="img/ticket.webp" alt="">Daily rewards, a season pass and a VIP pass you earn with a Brain Gauntlet.</li>
       <li><img src="img/maple_leaf.webp" alt="">Seasonal events and themes all year round.</li>
@@ -191,7 +194,7 @@
 
   <footer>
     Made with love for Mandy (and Surf). Works offline, no ads, no accounts.<br>
-    Item art: <a href="https://github.com/microsoft/fluentui-emoji" rel="noopener">Microsoft Fluent Emoji</a> (MIT).
+    Item art: <a href="https://github.com/microsoft/fluentui-emoji" rel="noopener">Microsoft Fluent Emoji</a> (MIT). Scenes, Mandy, Surf and music made for the game.
   </footer>
 </div>
 
