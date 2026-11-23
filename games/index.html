@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: https://ogp.me/ns#">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Games — Stephen K. Morgan</title>
+<meta name="description" content="Android games I make: Surf &amp; Swirl Bakery and Therefore. Free, no ads, works offline.">
+<meta name="author" content="Stephen K. Morgan">
+<link rel="canonical" href="https://stephenkmorgan.github.io/games/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stephenkmorgan.github.io/">
+<meta property="og:title" content="Stephen K. Morgan — Software Engineer">
+<meta property="og:description" content="Software engineer on internal products and security at GOLDPoint Systems, with a background in machine learning.">
+<meta property="og:image" content="https://stephenkmorgan.github.io/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stephen K. Morgan — Software Engineer">
+<meta name="twitter:description" content="Software engineer on internal products and security at GOLDPoint Systems, with a background in machine learning.">
+<meta name="twitter:image" content="https://stephenkmorgan.github.io/assets/img/og-image.png">
+
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e7eaf0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#23272e" media="(prefers-color-scheme: dark)">
+
+<link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/fonts/inter.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+
+<!-- Applies the stored theme before first paint so the page never flashes the
+     wrong colors on load. Must stay inline and stay in <head>. -->
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem("theme");
+    if (saved === "dark" || saved === "light") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+  } catch (e) { /* storage blocked — fall back to the OS preference */ }
+})();
+</script>
+
+<style>
+  .game__version { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; margin: 0.4rem 0 0.9rem; min-height: 1.2em; }
+  .project .btn-row { margin-bottom: 1rem; }
+</style>
+</head>
+
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ===================================================================
+     Icon sprite. Defined once, referenced with <use>. Keeps the markup
+     readable and every glyph inherits currentColor.
+     =================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .5C5.73.5.99 5.24.99 11.5c0 4.86 3.15 8.98 7.52 10.43.55.1.75-.24.75-.53v-1.9c-3.06.66-3.71-1.3-3.71-1.3-.5-1.28-1.23-1.62-1.23-1.62-1-.68.08-.67.08-.67 1.1.08 1.69 1.14 1.69 1.14.98 1.69 2.58 1.2 3.21.92.1-.71.39-1.2.7-1.48-2.44-.28-5.01-1.22-5.01-5.44 0-1.2.43-2.18 1.13-2.95-.11-.28-.49-1.4.11-2.92 0 0 .93-.3 3.03 1.13a10.5 10.5 0 0 1 5.52 0c2.1-1.43 3.02-1.13 3.02-1.13.6 1.52.22 2.64.11 2.92.71.77 1.13 1.75 1.13 2.95 0 4.23-2.58 5.16-5.03 5.43.4.34.75 1.01.75 2.04v3.03c0 .29.2.64.76.53a10.53 10.53 0 0 0 7.51-10.43C23.01 5.24 18.27.5 12 .5z"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="4.2"/>
+      <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/>
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+    </symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>
+    </symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>
+    </symbol>
+    <symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 12 6-3.5v7z"/>
+    </symbol>
+    <symbol id="i-game" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 11h4M9 9v4"/><circle cx="16" cy="11" r="1"/><circle cx="18" cy="14" r="1"/>
+      <rect x="2" y="6" width="20" height="13" rx="4"/>
+    </symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="4"/>
+      <circle cx="8.5" cy="8.5" r="1"/><circle cx="15.5" cy="15.5" r="1"/><circle cx="12" cy="12" r="1"/>
+    </symbol>
+    <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m9 8-5 4 5 4"/><path d="m15 8 5 4-5 4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===================================================================
+     Header
+     =================================================================== -->
+<header class="site-header">
+  <div class="wrap">
+    <nav class="nav raised-sm" aria-label="Primary">
+      <a class="nav__brand" href="../">Stephen K. Morgan<span>.</span></a>
+
+      <ul class="nav__list" id="nav-list">
+        <li><a class="nav__link" href="../#about">About</a></li>
+        <li><a class="nav__link" href="../#experience">Experience</a></li>
+        <li><a class="nav__link" href="../#skills">Skills</a></li>
+        <li><a class="nav__link" href="../#projects">Projects</a></li>
+        <li><a class="nav__link" href="../#contact">Contact</a></li>
+        <li><a class="nav__link" href="./" aria-current="true">Games</a></li>
+      </ul>
+
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch to dark theme">
+        <svg class="icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+
+      <button class="icon-btn nav__toggle" type="button" data-nav-toggle
+              aria-expanded="false" aria-controls="nav-list" aria-label="Menu">
+        <svg aria-hidden="true"><use href="#i-menu"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" id="games" aria-labelledby="games-title" style="padding-top: 7rem">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="section__eyebrow pressed-sm">Games</p>
+        <h1 class="section__title letterpress" id="games-title">Things I make for fun</h1>
+        <p class="section__lede">
+          Native Android games, free, with no ads and no accounts. They work offline, and updates install
+          over the old version without losing your progress.
+        </p>
+      </div>
+
+      <div class="grid grid--2">
+        <article class="card raised project" data-repo="StephenKMorgan/Learning-Merge-Game">
+          <div class="project__top">
+            <img src="bakery-icon.png" alt="" width="64" height="64" style="border-radius: 16px">
+          </div>
+          <h2 class="project__title">Surf &amp; Swirl Bakery</h2>
+          <p class="project__desc">
+            A cozy merge game: fix up a bakery with Surf the golden retriever. Nothing costs money; shop treats
+            are paid with brain puzzles that adapt to how you play. Hand-drawn scenes and live, never-repeating music.
+          </p>
+          <p class="game__version" aria-live="polite"></p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="https://github.com/StephenKMorgan/Learning-Merge-Game/releases/latest/download/surf-and-swirl.apk">Download for Android</a>
+            <a class="btn" href="../bakery/">More &amp; install help</a>
+          </div>
+          <div class="project__foot">
+            <span class="chip chip--tech pressed-sm">Kotlin</span>
+            <span class="chip chip--tech pressed-sm">Jetpack Compose</span>
+            <span class="chip chip--tech pressed-sm">Live synth music</span>
+          </div>
+        </article>
+
+        <article class="card raised project" data-repo="StephenKMorgan/Deductive-Logic-">
+          <div class="project__top">
+            <img src="therefore-icon.png" alt="" width="64" height="64" style="border-radius: 16px">
+          </div>
+          <h2 class="project__title">Therefore</h2>
+          <p class="project__desc">
+            Deductive logic proofs, one line at a time. Courses from If–Then Basics to predicate logic, every line
+            checked and explained, three logic games, and a daily proof with streaks.
+          </p>
+          <p class="game__version" aria-live="polite"></p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="https://github.com/StephenKMorgan/Deductive-Logic-/releases/latest/download/therefore.apk">Download for Android</a>
+            <a class="btn" href="../therefore/">More &amp; install help</a>
+          </div>
+          <div class="project__foot">
+            <span class="chip chip--tech pressed-sm">Kotlin</span>
+            <span class="chip chip--tech pressed-sm">Jetpack Compose</span>
+            <span class="chip chip--tech pressed-sm">Room</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* Show each game's latest version, or "coming soon" until it has a release. */
+document.querySelectorAll("[data-repo]").forEach(function (card) {
+  var out = card.querySelector(".game__version");
+  var btn = card.querySelector(".btn--primary");
+  fetch("https://api.github.com/repos/" + card.dataset.repo + "/releases/latest")
+    .then(function (r) { if (r.status === 404) return null; if (!r.ok) throw 0; return r.json(); })
+    .then(function (rel) {
+      if (!rel) {
+        out.textContent = "Coming soon";
+        btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href"); btn.textContent = "Coming soon";
+        btn.style.opacity = "0.55"; btn.style.pointerEvents = "none";
+        return;
+      }
+      var date = new Date(rel.published_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+      out.textContent = "Version " + rel.tag_name.replace(/^v/, "") + " · " + date;
+    })
+    .catch(function () {});
+});
+</script>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__inner">
+      <p>&copy; <span data-year>2026</span> Stephen K. Morgan</p>
+      <p>Built from scratch — no frameworks.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js" defer></script>
+</body>
+</html>

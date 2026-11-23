@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Therefore</title>
+<meta name="description" content="Download Therefore, an Android app for deductive logic proofs, one line at a time.">
+<link rel="canonical" href="https://stephenkmorgan.github.io/therefore/">
+<meta name="theme-color" content="#f2f4f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10131f" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="img/icon.png" type="image/png">
+<link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/fonts/inter.css">
+<style>
+  /* Colours from the Therefore app's own theme (light and dark). */
+  :root {
+    --bg: #f2f4f8; --surface: #ffffff; --sunk: #e8ebf3; --ink: #141a2e; --muted: #5b6480; --line: #d9deea;
+    --accent: #2f45c9; --on-accent: #ffffff; --accent-soft: #e3e7fb; --good: #17734a; --good-soft: #def2e7;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10131f; --surface: #181c2c; --sunk: #0c0f19; --ink: #e7eaf5; --muted: #98a1bf; --line: #2a3048;
+      --accent: #8d9dff; --on-accent: #10131f; --accent-soft: #232a50; --good: #5ccf96; --good-soft: #15301f;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 500 17px/1.55 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); }
+  .wrap { width: min(100% - 32px, 620px); margin: 0 auto; padding: 24px 0 56px; }
+  .back { display: inline-block; color: var(--muted); text-decoration: none; font-size: 15px; margin-bottom: 12px; }
+  .back:hover { text-decoration: underline; }
+
+  .hero { display: flex; gap: 18px; align-items: center; margin: 8px 0 20px; }
+  .hero img { width: 84px; height: 84px; border-radius: 22px; box-shadow: 0 6px 18px rgba(20, 26, 46, 0.18); }
+  h1 { margin: 0; font-size: clamp(32px, 8vw, 42px); letter-spacing: -0.02em; line-height: 1.05; }
+  .tagline { margin: 4px 0 0; color: var(--muted); }
+
+  .proof {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 15px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 0 0 18px;
+    white-space: pre; overflow-x: auto;
+  }
+  .proof .why { color: var(--muted); }
+  .proof .goal { color: var(--accent); font-weight: 700; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; margin: 16px 0; }
+  h2 { margin: 0 0 10px; font-size: 21px; letter-spacing: -0.01em; }
+
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+    padding: 15px 20px; border-radius: 14px; border: 0;
+    background: var(--accent); color: var(--on-accent); font: 700 19px/1 inherit; text-decoration: none;
+    transition: transform 0.1s ease, filter 0.15s ease;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: translateY(2px); }
+  .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .btn[aria-disabled="true"] { background: var(--sunk); color: var(--muted); pointer-events: none; }
+  .meta { text-align: center; margin: 12px 0 0; font-size: 15px; color: var(--muted); }
+  .chip { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 14px; }
+
+  .notes { white-space: pre-line; margin: 0; }
+  ol { margin: 0; padding-left: 22px; }
+  ol li { margin: 6px 0; }
+  .tip { margin: 12px 0 0; font-size: 15px; color: var(--muted); }
+
+  .shots { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; scroll-snap-type: x mandatory; }
+  .shots img {
+    flex: 0 0 auto; width: 46%; max-width: 220px; height: auto; aspect-ratio: 480 / 1066;
+    border-radius: 16px; border: 1px solid var(--line); background: var(--surface); scroll-snap-align: start;
+  }
+
+  .features { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .features li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+  .features .sym {
+    width: 34px; height: 34px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; font-weight: 800; font-size: 17px;
+  }
+
+  footer { text-align: center; font-size: 13px; color: var(--muted); margin-top: 28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../games/">‹ Games</a>
+
+  <header class="hero">
+    <img src="img/icon.png" alt="" width="84" height="84">
+    <div>
+      <h1>Therefore</h1>
+      <p class="tagline">Deductive logic proofs, one line at a time.</p>
+    </div>
+  </header>
+
+  <div class="proof" aria-label="An example puzzle"><span class="why">1.</span> (P ∧ Q) → R     <span class="why">Premise</span>
+<span class="why">2.</span> P               <span class="why">Premise</span>
+<span class="why">3.</span> ¬R ∨ S          <span class="why">Premise</span>
+<span class="why">4.</span> ¬S              <span class="why">Premise</span>   <span class="goal">∴ ¬Q</span></div>
+
+  <section class="card" aria-label="Download">
+    <a class="btn" id="download" href="https://github.com/StephenKMorgan/Deductive-Logic-/releases/latest/download/therefore.apk">
+      <span id="download-label">Download for Android</span>
+    </a>
+    <p class="meta" id="meta">Checking for the latest version…</p>
+  </section>
+
+  <section class="card" id="whats-new" hidden aria-labelledby="new-title">
+    <h2 id="new-title">What's new</h2>
+    <p class="notes" id="notes"></p>
+  </section>
+
+  <section class="card" aria-labelledby="peek-title">
+    <h2 id="peek-title">A look inside</h2>
+    <div class="shots">
+      <img src="img/shot-home.webp" alt="Courses, each adding new rules, with a daily proof at the top" loading="lazy" width="480" height="1066">
+      <img src="img/shot-proof.webp" alt="Writing a proof line by line, with a hint and the logic keypad" loading="lazy" width="480" height="1066">
+      <img src="img/shot-result.webp" alt="A graded result with the model proof explained line by line" loading="lazy" width="480" height="1066">
+      <img src="img/shot-island.webp" alt="Truth-tellers and Liars, solved and explained in logic" loading="lazy" width="480" height="1066">
+      <img src="img/shot-daily.webp" alt="The daily proof calendar with streaks" loading="lazy" width="480" height="1066">
+    </div>
+    <ul class="features">
+      <li><span class="sym">→</span><span><strong>10 courses</strong>, from If–Then Basics to Conditional and Indirect Proof, plus predicate logic with ∀, ∃, relations and identity.</span></li>
+      <li><span class="sym">✓</span><span><strong>Every line is checked</strong> and wrong ones are explained, including the classic fallacies. Hints come in three steps.</span></li>
+      <li><span class="sym">A</span><span><strong>Graded results</strong> with a model proof explained in plain English, and lessons on the mistakes you made.</span></li>
+      <li><span class="sym">◆</span><span><strong>Logic games:</strong> Truth-tellers &amp; Liars, Valid or Not?, and Switchboard.</span></li>
+      <li><span class="sym">∴</span><span><strong>Daily proofs</strong> with a calendar, streaks, a rare S rank, and a stats screen.</span></li>
+    </ul>
+  </section>
+
+  <section class="card" aria-labelledby="install-title">
+    <h2 id="install-title">How to install</h2>
+    <ol>
+      <li>Tap <strong>Download for Android</strong> above.</li>
+      <li>Open the downloaded <strong>therefore.apk</strong> (from the notification, or <strong>Files → Downloads</strong>).</li>
+      <li>The first time, allow installs from this source when the phone asks, then go back.</li>
+      <li>Tap <strong>Install</strong>. If Play Protect says it doesn't recognize the app, tap <strong>More details → Install anyway</strong>. It's only unrecognized because it isn't from the Play Store.</li>
+    </ol>
+    <p class="tip"><strong>Updating later?</strong> Same button, same steps; the phone says <strong>Update</strong>. Your progress, streaks and stats stay.</p>
+  </section>
+
+  <footer>Free, no ads, no accounts, works offline. Made by <a href="../">Stephen K. Morgan</a>.</footer>
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById("download");
+  var label = document.getElementById("download-label");
+  var meta = document.getElementById("meta");
+  fetch("https://api.github.com/repos/StephenKMorgan/Deductive-Logic-/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
+    .then(function (r) {
+      if (r.status === 404) {
+        btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href");
+        label.textContent = "Coming soon";
+        meta.textContent = "The first release is on its way.";
+        return null;
+      }
+      if (!r.ok) throw new Error("status " + r.status);
+      return r.json();
+    })
+    .then(function (rel) {
+      if (!rel) return;
+      var apk = (rel.assets || []).filter(function (a) { return /\.apk$/.test(a.name); })[0];
+      if (apk) btn.href = apk.browser_download_url;
+      var date = rel.published_at ? new Date(rel.published_at).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }) : "";
+      meta.innerHTML = "";
+      var chip = document.createElement("span"); chip.className = "chip"; chip.textContent = "Version " + (rel.tag_name || "").replace(/^v/, "");
+      meta.appendChild(chip);
+      meta.appendChild(document.createTextNode(" " + (date ? "Released " + date : "") + (apk ? " · " + Math.round(apk.size / 1e6) + " MB" : "")));
+      if (rel.body) { document.getElementById("notes").textContent = rel.body.trim(); document.getElementById("whats-new").hidden = false; }
+    })
+    .catch(function () { meta.textContent = "Tap to get the newest version."; });
+})();
+</script>
+</body>
+</html>
